@@ -1,0 +1,137 @@
+[gd_scene load_steps=16 format=3 uid="uid://b3d0wxxu677on"]
+
+[ext_resource type="Texture2D" uid="uid://bkoglqqd53l76" path="res://soil-tile.png" id="1_k45h1"]
+[ext_resource type="Script" path="res://main.gd" id="1_qkujf"]
+[ext_resource type="Script" path="res://camera.gd" id="2_iu2ot"]
+[ext_resource type="PackedScene" uid="uid://bygwx6javgood" path="res://chambers/chamber.tscn" id="4_3tpfl"]
+[ext_resource type="Script" path="res://pheromones/pheromone_painter.gd" id="4_obt3k"]
+[ext_resource type="Script" path="res://jobs/job_queue.gd" id="5_cy6ic"]
+[ext_resource type="Texture2D" uid="uid://dw1qqjsgaye3l" path="res://pheromones/splodge.png" id="6_l33bg"]
+[ext_resource type="Script" path="res://paths/astar_viz.gd" id="7_lmugm"]
+[ext_resource type="PackedScene" uid="uid://ceow634lxi1x" path="res://resources/food.tscn" id="7_ujfp3"]
+[ext_resource type="Script" path="res://paths/path_planner.gd" id="8_yekt2"]
+[ext_resource type="FontFile" uid="uid://gw41oai2ics4" path="res://m5x7.ttf" id="11_bdfo3"]
+[ext_resource type="Script" path="res://controls.gd" id="12_bv6sg"]
+[ext_resource type="Texture2D" uid="uid://iyh1hpqw6x7k" path="res://food_brush.tres" id="14_0g1f1"]
+[ext_resource type="Texture2D" uid="uid://cx276pyncd04n" path="res://tunnel_brush.tres" id="15_jqpmo"]
+
+[sub_resource type="Theme" id="Theme_ut40w"]
+default_font = ExtResource("11_bdfo3")
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_qkujf")
+
+[node name="Background" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3650.0
+offset_top = -2560.0
+offset_right = 3661.0
+offset_bottom = 2610.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_k45h1")
+stretch_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.5, 0.5)
+script = ExtResource("2_iu2ot")
+
+[node name="JobQueue" type="Node2D" parent="."]
+script = ExtResource("5_cy6ic")
+
+[node name="PheromonePainter" type="Node2D" parent="."]
+script = ExtResource("4_obt3k")
+pheromone_colors = {
+0: Color(0, 0, 0, 0.5),
+1: Color(0.634993, 0.470665, 0, 0.5),
+2: Color(0.156863, 0.462745, 0, 0.211765),
+3: Color(0.931871, 0, 0.196747, 0.5)
+}
+
+[node name="TemporaryLine" type="Line2D" parent="PheromonePainter"]
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="TemporarySplodge" type="Sprite2D" parent="PheromonePainter"]
+position = Vector2(-188, 144)
+texture = ExtResource("6_l33bg")
+
+[node name="Navigation" type="CanvasGroup" parent="."]
+self_modulate = Color(1, 1, 1, 0.768627)
+
+[node name="Paths" type="Node2D" parent="Navigation"]
+script = ExtResource("8_yekt2")
+
+[node name="Visualiser" type="Node2D" parent="Navigation/Paths"]
+visible = false
+z_index = 4096
+script = ExtResource("7_lmugm")
+point_radius = 2
+line_width = 3
+
+[node name="Chambers" type="Node2D" parent="Navigation"]
+
+[node name="Chamber" parent="Navigation/Chambers" instance=ExtResource("4_3tpfl")]
+
+[node name="Food" type="Node2D" parent="Navigation"]
+
+[node name="Food" parent="Navigation/Food" instance=ExtResource("7_ujfp3")]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Controls" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -231.0
+offset_bottom = 98.0
+grow_horizontal = 0
+mouse_filter = 0
+theme = SubResource("Theme_ut40w")
+script = ExtResource("12_bv6sg")
+
+[node name="Label" type="Label" parent="CanvasLayer/Controls"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Pheromone brush"
+
+[node name="MenuButton" type="OptionButton" parent="CanvasLayer/Controls"]
+layout_mode = 2
+selected = 1
+item_count = 3
+popup/item_0/text = "None"
+popup/item_1/text = "Tunnel"
+popup/item_1/icon = ExtResource("15_jqpmo")
+popup/item_1/id = 1
+popup/item_2/text = "Food"
+popup/item_2/icon = ExtResource("14_0g1f1")
+popup/item_2/id = 2
+
+[node name="Label2" type="Label" parent="CanvasLayer/Controls"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "How to play:
+
+Use the pheromone brush to paint instructions for the worker ants.
+
+The tunnel brush will instruct a worker ant to dig a tunnel that will allow the workers to move around. Tunnels should be connected to chambers or other tunnels to allow the ants to travel along them.
+
+
+In order for the ants to be able to find food, a food pheromone should be painted at the location of the food. The food pheromone will wear out after some time and will need to be reapplied.
+
+Controls:
+Scroll to zoom
+Middle mouse button to pan
+Left click to draw
+Right click to cancel tunnel pheromone drawing"
+autowrap_mode = 2
+
+[connection signal="item_selected" from="CanvasLayer/Controls/MenuButton" to="CanvasLayer/Controls" method="_on_pheromone_type_dropdown_item_selected"]

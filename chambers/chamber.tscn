@@ -1,0 +1,51 @@
+[gd_scene load_steps=7 format=3 uid="uid://bygwx6javgood"]
+
+[ext_resource type="Script" path="res://chambers/chamber.gd" id="1_5vi4t"]
+[ext_resource type="Shader" path="res://main.gdshader" id="1_ltfkn"]
+[ext_resource type="Texture2D" uid="uid://decsysrpi67rv" path="res://chambers/chamber.png" id="2_t54df"]
+[ext_resource type="FontFile" uid="uid://gw41oai2ics4" path="res://m5x7.ttf" id="4_sq43m"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bklwy"]
+shader = ExtResource("1_ltfkn")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o30v4"]
+radius = 59.0
+
+[node name="Chamber" type="StaticBody2D" groups=["chambers"]]
+script = ExtResource("1_5vi4t")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_bklwy")
+texture = ExtResource("2_t54df")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_o30v4")
+
+[node name="HealthLabel" type="Label" parent="."]
+offset_left = -79.0
+offset_top = -105.0
+offset_right = 79.0
+offset_bottom = -79.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("4_sq43m")
+theme_override_font_sizes/font_size = 32
+text = "Health: 100/100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HungerLabel" type="Label" parent="."]
+offset_left = -64.0
+offset_top = -78.0
+offset_right = 64.0
+offset_bottom = -65.0
+theme_override_colors/font_color = Color(0.823529, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("4_sq43m")
+horizontal_alignment = 1
+vertical_alignment = 1

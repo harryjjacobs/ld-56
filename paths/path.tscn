@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://d3x7ems42jnii"]
+
+[node name="Path" type="Path2D"]
+
+[node name="PathFollow2D" type="PathFollow2D" parent="."]

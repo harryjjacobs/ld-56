@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=3 uid="uid://chp0pgepfxuib"]
+
+[ext_resource type="Texture2D" uid="uid://cf7bqtre5rgyg" path="res://ants/ant-walking-sheet.png" id="1_jwuwv"]
+[ext_resource type="Script" path="res://ants/worker_ant.gd" id="2_8ruyq"]
+
+[sub_resource type="Animation" id="Animation_2ter0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_krfuj"]
+resource_name = "idle"
+
+[sub_resource type="Animation" id="Animation_f0fea"]
+resource_name = "walk"
+length = 0.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_eboym"]
+_data = {
+"RESET": SubResource("Animation_2ter0"),
+"idle": SubResource("Animation_krfuj"),
+"walk": SubResource("Animation_f0fea")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_odu3h"]
+
+[node name="WorkerAnt" type="Sprite2D"]
+position = Vector2(36, 34)
+texture = ExtResource("1_jwuwv")
+hframes = 2
+script = ExtResource("2_8ruyq")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_eboym")
+}
+
+[node name="FoodShapeCast2D" type="ShapeCast2D" parent="."]
+position = Vector2(16, 0)
+shape = SubResource("CircleShape2D_odu3h")
+target_position = Vector2(-35, 0)
+collision_mask = 2
